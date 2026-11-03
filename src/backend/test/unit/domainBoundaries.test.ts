@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import test from 'node:test'
 import ts from 'typescript'
@@ -31,6 +31,7 @@ for (const [file, source] of sources) {
     const path = resolve(dirname(file), value)
     if (path.includes('/generated/prisma/')) return undefined
     const target = [path, path + '.ts', path + '.tsx', path + '.mjs', path + '/index.ts'].find(candidate => sources.has(candidate))
+    if (!target && path.startsWith(resolve('scripts') + '/') && existsSync(path)) return undefined
     assert.ok(target, `Missing import: ${file} -> ${value}`)
     return target
   }).filter((value): value is string => value !== undefined)
@@ -81,8 +82,6 @@ test('Nest는 라우팅·Guard를 맡고 전송 계층·공통 UI는 각자의 �
   for (const target of reachable(resolve(root, 'backend/global/util/invalidationUtil.ts'))) {
     assert.ok(!target.includes('/backend/domain/'), `Invalidation utility reaches domain: ${target}`)
   }
-  assert.doesNotMatch(readFileSync('src/frontend/global/util/apiClient.ts', 'utf8'), /uuidV7|\/api\/groups|stale_round|bank_account_conflict/)
-  for (const file of ['ui.tsx', 'hooks.ts']) assert.doesNotMatch(readFileSync(`src/frontend/global/util/${file}`, 'utf8'), /stale_round|bank_account_conflict|RoundStatus|onboardingCompletedAt/)
   assert.doesNotMatch(readFileSync('src/backend/domain/user/controller/user.controller.ts', 'utf8'), /cookies\.set/)
 })
 

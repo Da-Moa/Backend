@@ -1,0 +1,31 @@
+# compose.yaml과 함께 사용하는 선택적 앱 구성. 운영 배포에는 자동 적용하지 않습니다.
+services:
+  backend:
+    image: ${BACKEND_IMAGE:-da-moa-backend:local}
+    build: .
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOST: 0.0.0.0
+      DATABASE_URL: postgresql://da_moa:da_moa_local@postgres:5432/da_moa_dev
+      MINIO_ENDPOINT: http://minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3001:3001"
+  frontend:
+    image: ${FRONTEND_IMAGE:?Set FRONTEND_IMAGE to a separately built Frontend image}
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+      BACKEND_URL: http://backend:3001
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:3000:3000"

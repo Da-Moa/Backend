@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict'
-import nextEnv from '@next/env'
+import { loadEnv } from './loadEnv.mjs'
 import { createDatabaseClient } from '../src/backend/global/database/db.ts'
 import { TEST_ACCOUNTS as accounts } from '../src/shared/testAccounts.ts'
 import { applyMigrations } from './migrations.mjs'
 
-nextEnv.loadEnvConfig(process.cwd())
+loadEnv()
 const database = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL
 assert.ok(database, 'TEST_DATABASE_URL or DATABASE_URL is required')
 const url = new URL(database)

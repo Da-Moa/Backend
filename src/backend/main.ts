@@ -1,9 +1,5 @@
-import nextEnvironment from '@next/env';
+import { loadEnv } from '../../scripts/loadEnv.mjs';
 
-// Load environment values before importing modules that read configuration.
-nextEnvironment.loadEnvConfig(
-  process.cwd(),
-  process.env.NODE_ENV !== 'production',
-);
+loadEnv();
 const { bootstrap } = await import('./global/runtime/bootstrap');
 await bootstrap();

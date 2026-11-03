@@ -102,7 +102,7 @@ test('인증된 WebSocket에 본인의 커밋된 변경 알림만 전달한다',
     assert.equal(invalidRefresh.status, 401)
     assert.equal(invalidRefresh.headers.getSetCookie().length, 2)
     const home = await requestWithRateLimit(`${origin}/home`)
-    assert.equal(home.status, 200, `Home must compile in Turbopack development mode without server-only imports\n${output.slice(-6000)}`)
+    assert.equal(home.status, 404, 'The independent backend does not serve frontend pages')
     async function connect(key) {
       const login = await requestWithRateLimit(`${origin}/api/auth/test-login`, { method: 'POST', redirect: 'manual', headers: { origin, 'content-type': 'application/x-www-form-urlencoded' }, body: `key=${key}` })
       assert.equal(login.status, 303)

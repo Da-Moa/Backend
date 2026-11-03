@@ -5,11 +5,12 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const suites = {
-  unit: ['src/backend/test/unit', 'src/frontend/test/unit'],
+  unit: ['src/backend/test/unit'],
   domain: ['src/backend/test/domain'],
   integration: ['src/backend/test/integration'],
   scenario: ['src/backend/test/scenario'],
   smoke: ['src/backend/test/integration/routes.integration.test.ts'],
+  transport: ['src/backend/test/transport'],
 };
 let active;
 let interrupted;
@@ -148,7 +149,7 @@ async function main() {
     env.DATABASE_URL = env.TEST_DATABASE_URL;
     env.POSTGRES_URL = env.TEST_DATABASE_URL;
     env.AUTH_JWT_SECRET ||= 'local-only-backend-test-secret-at-least-32-bytes';
-    env.RECEIPT_WORKER_ENABLED = 'false';
+    env.RECEIPT_WORKER_ENABLED = kind === 'transport' ? 'true' : 'false';
     for (const suite of kinds) await runSuite(suite, env);
   } finally {
     if (compose) {

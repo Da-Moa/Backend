@@ -1,7 +1,10 @@
 node_modules
 .next
+dist
 .git
 .env*
-.minio.env
-*.tar.gz
+!.env.example
+perf/results
 test-results
+playwright-report
+*.log

@@ -7,7 +7,7 @@ import { RealtimeModule } from '../websocket/module/realtime.module';
 import { RateLimitService } from '../rateLimit/rateLimit.service';
 import { RealtimeTransport } from '../websocket/realtimeTransport';
 import { MetricsServer } from '../monitoring/metricsServer';
-import { FrontendRuntime } from './frontendRuntime';
+import { ApiRuntime } from './apiRuntime';
 import { RuntimeLifecycle } from './runtimeLifecycle';
 import { HttpDrain } from './httpDrain';
 
@@ -23,7 +23,7 @@ import { HttpDrain } from './httpDrain';
     RateLimitService,
     RealtimeTransport,
     MetricsServer,
-    FrontendRuntime,
+    ApiRuntime,
     RuntimeLifecycle,
     HttpDrain,
   ],

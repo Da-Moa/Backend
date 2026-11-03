@@ -19,7 +19,9 @@ dist-ssr
 !.env.example
 
 # 성능 측정 결과
-perf
+perf/results/
+perf/*.json.gz
+perf/*-trace.json
 
 # Editor directories and files
 .vscode/*
@@ -36,3 +38,5 @@ test-account.txt
 # Generated Prisma client
 src/backend/generated/prisma/
 test-results/
+
+playwright-report/

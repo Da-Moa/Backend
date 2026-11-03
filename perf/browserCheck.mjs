@@ -1,4 +1,4 @@
-import { uuidV7 } from '../../../shared/uuid.ts'
+import { uuidV7 } from '../src/shared/uuid.ts'
 // UI regression in an isolated local DB; --expenses-only checks expense/round/draw/receipt-check mutation invalidation.
 // Run with a dev server using that same test DB and Chrome --remote-debugging-port=9223.
 import assert from 'node:assert/strict'
@@ -7,11 +7,11 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import sharp from 'sharp'
-import { signInKakao } from '../../../backend/test/domainTestSupport.ts'
-import { REFRESH_TOKEN_COOKIE_NAME } from '../../../backend/global/auth/native.ts'
-import { withWriteTransaction } from '../../../backend/test/domainTestSupport';
-import { BANKS, formatAccountNumber } from '../../../shared/domain/user/index.ts'
-import { CURRENCIES, CURRENCY_CODES } from '../../../shared/domain/settle/money.ts'
+import { signInKakao } from '../src/backend/test/support/domainTestSupport.ts'
+import { REFRESH_TOKEN_COOKIE_NAME } from '../src/backend/global/auth/native.ts'
+import { withWriteTransaction } from '../src/backend/test/support/domainTestSupport';
+import { BANKS, formatAccountNumber } from '../src/shared/domain/user/index.ts'
+import { CURRENCIES, CURRENCY_CODES } from '../src/shared/domain/settle/money.ts'
 
 const database = process.env.TEST_DATABASE_URL
 assert.ok(database && ['localhost', '127.0.0.1', '[::1]'].includes(new URL(database).hostname), 'TEST_DATABASE_URL must point to an isolated local PostgreSQL database')

@@ -11,12 +11,11 @@ import { PrismaService } from '../database/prisma.service';
 import { RealtimeTransport } from '../websocket/realtimeTransport';
 import { RateLimitService } from '../rateLimit/rateLimit.service';
 import { MetricsServer } from '../monitoring/metricsServer';
-import { FrontendRuntime } from './frontendRuntime';
+import { ApiRuntime } from './apiRuntime';
 import { HttpDrain } from './httpDrain';
 import type { Request, Response, NextFunction } from 'express';
 
 export type RuntimeOptions = {
-  frontend?: { dev: boolean; port: number };
   metricsPort?: number;
   host: string;
   startWorker?: boolean;
@@ -40,7 +39,7 @@ export class RuntimeLifecycle
     @Inject(RealtimeTransport) private readonly realtime: RealtimeTransport,
     @Inject(RateLimitService) private readonly rateLimit: RateLimitService,
     @Inject(MetricsServer) private readonly metrics: MetricsServer,
-    @Inject(FrontendRuntime) private readonly frontend: FrontendRuntime,
+    @Inject(ApiRuntime) private readonly api: ApiRuntime,
     @Inject(HttpDrain) private readonly http: HttpDrain,
   ) {}
 
@@ -59,11 +58,7 @@ export class RuntimeLifecycle
         nextRoute();
       },
     );
-    if (options.frontend)
-      await this.frontend.prepare(app, this.rateLimit, {
-        ...options.frontend,
-        metrics: options.metricsPort !== undefined,
-      });
+    this.api.prepare(app, this.rateLimit, options.metricsPort !== undefined);
   }
 
   async onApplicationBootstrap() {
@@ -116,15 +111,6 @@ export class RuntimeLifecycle
   onApplicationShutdown() {
     this.closing ??= (async () => {
       await this.beforeApplicationShutdown();
-      const frontend = await Promise.allSettled([this.frontend.close()]);
-      this.failures.push(
-        ...frontend
-          .filter(
-            (result): result is PromiseRejectedResult =>
-              result.status === 'rejected',
-          )
-          .map((result) => result.reason),
-      );
       try {
         await this.prisma.close();
       } catch (error) {

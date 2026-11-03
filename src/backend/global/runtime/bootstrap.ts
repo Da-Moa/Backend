@@ -11,7 +11,7 @@ function serverPort(value: string | undefined, name: string) {
 
 export async function bootstrap() {
   const development = process.env.NODE_ENV !== 'production';
-  const port = serverPort(process.env.PORT || '3000', 'PORT');
+  const port = serverPort(process.env.PORT || '3001', 'PORT');
   const metricsPort = process.env.METRICS_PORT
     ? serverPort(process.env.METRICS_PORT, 'METRICS_PORT')
     : undefined;
@@ -22,7 +22,6 @@ export async function bootstrap() {
     // Preserve the successful exit-code contract after all framework shutdown hooks finish.
     app.enableShutdownHooks(['SIGTERM', 'SIGINT'], { useProcessExit: true });
     await app.get(RuntimeLifecycle).prepare(app, {
-      frontend: { dev: development, port },
       metricsPort,
       host,
     });

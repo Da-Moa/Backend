@@ -112,3 +112,20 @@ npm run contracts:export -- /Users/user/da-moa/Frontend/src/shared/domain
 
 DTO에서 Nest·Swagger 의존성이 없는 타입을 추출합니다.
 각 저장소는 독립 사본을 사용하므로 계약 변경 시 프론트 타입 검사와 API 검증을 함께 수행합니다.
+
+## 자동 배포
+
+`main` 푸시 또는 `main`의 수동 실행에서 검증에 통과하면
+ARM64 `ghcr.io/da-moa/backend` 이미지를 게시하고 Deploy 저장소에 해당 컴포넌트의 배포를 요청합니다.
+실제 운영 배포에는 태그 대신 `sha256` digest를 전달합니다.
+검증 실패 시 이미지 게시와 배포 요청은 실행하지 않습니다.
+
+작업 브랜치·PR은 검증만 수행합니다. 수동 실행의 `publish_image`를 선택하면
+작업 브랜치의 SHA 이미지를 게시할 수 있지만 `latest` 갱신과 운영 배포는 실행하지 않습니다.
+
+이 저장소에는 `DEPLOY_DISPATCH_TOKEN` Actions Secret이 필요합니다.
+Fine-grained PAT의 Resource owner는 `Da-Moa`, 대상 저장소는 `Deploy`만, 권한은 **Contents: Read and write**로 설정합니다.
+첫 게시 후 GHCR 패키지의 **Manage Actions access**에서 `Da-Moa/Deploy`에 Read 권한을 부여합니다.
+
+첫 분리 배포에는 Frontend·Backend의 main 이미지가 모두 필요합니다.
+설정·전환·복구 절차는 [Deploy 안내](https://github.com/Da-Moa/Deploy#readme)를 참고하세요.

@@ -17,7 +17,7 @@
 | 영수증 큐 | Node 기반 Graphile Worker 0.18.0 · PostgreSQL 영속 큐 |
 | 모니터링 | HTTP·DB 지표 · 별도 메트릭 서버 · 상태 API |
 | 테스트 | Node test runner · 모의 Nest 요청 · 격리 PostgreSQL·MinIO · 실제 전송 테스트 |
-| CI | GitHub Actions · 독립 단위·DB 테스트·타입 검사·빌드·Docker 빌드 |
+| CI | GitHub Actions · 단위·DB 테스트·타입 검사·ARM64 이미지 검증·GHCR 게시·컴포넌트 배포 요청 |
 
 현재 구현은 Nest.js이며 Spring 구현은 추후 추가할 수 있습니다.
 프론트는 [Frontend](https://github.com/Da-Moa/Frontend) 저장소에서 독립 실행합니다.
